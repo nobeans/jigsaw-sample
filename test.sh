@@ -1,15 +1,25 @@
 #!/bin/bash -xe
 
+# Clean
 find . -name "*.class" | xargs rm
 find mods -name "*.jar" | xargs rm
 
-find . -name "*.java" | xargs javac
-
-java -cp src/main/java my.HelloWorld
-java -cp src/main/java my.HelloWorld FooBar
-
+# Compile class using module
 mkdir -p mods
-jar --create --file mods/my-app.jar --main-class my.HelloWorld -C src/main/java .
+find src/my-lib -name "*.java" | xargs javac -d mods/my.lib
+find src/my-app -name "*.java" | xargs javac --module-path mods -d mods/my.app
 
-java -jar my-app.jar
-java -jar my-app.jar FooBar
+# Run class using module
+java -p mods -m my.app/my.app.HelloWorld
+java -p mods -m my.app/my.app.HelloWorld FooBar
+
+# Package modules
+mkdir -p mlib
+jar --create --file mlib/my-lib.jar -C mods/my.lib .
+jar --create --file mlib/my-app.jar --main-class my.app.HelloWorld -C mods/my.app .
+
+# Run as module jar
+java -p mlib -m my.app
+java -p mlib -m my.app FooBar
+
+echo "Done."
