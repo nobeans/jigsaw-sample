@@ -22,4 +22,12 @@ jar --create --file mlib/my-app.jar --main-class my.app.HelloWorld -C mods/my.ap
 java -p mlib -m my.app
 java -p mlib -m my.app FooBar
 
+# Customize JDK
+rm -rf myjdk
+jlink --module-path /Users/ynak/.sdkman/candidates/java/current/jmods:mlib --add-modules my.app --output myjdk --launcher myapp=my.app/my.app.HelloWorld
+
+# Run as customized JDK
+myjdk/bin/myapp
+myjdk/bin/myapp FooBar
+
 echo "Done."
