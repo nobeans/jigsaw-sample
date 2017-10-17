@@ -1,8 +1,7 @@
 #!/bin/bash -xe
 
 # Clean
-find . -name "*.class" | xargs rm
-find mods -name "*.jar" | xargs rm
+./clean.sh
 
 # Compile class using module
 mkdir -p mods
@@ -23,7 +22,6 @@ java -p mlib -m my.app
 java -p mlib -m my.app FooBar
 
 # Customize JDK
-rm -rf myjdk
 jlink --module-path /Users/ynak/.sdkman/candidates/java/current/jmods:mlib --add-modules my.app --output myjdk --launcher myapp=my.app/my.app.HelloWorld
 
 # Run as customized JDK
